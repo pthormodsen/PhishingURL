@@ -1,0 +1,7 @@
+version: 2
+
+# The datasets are scraped phishing/benign URLs. They contain attackers' API keys,
+# tokens and user:pass@ URLs that are not ours and cannot be rotated.
+secret:
+  ignored_paths:
+    - "data/**"

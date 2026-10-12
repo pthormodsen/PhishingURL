@@ -1,0 +1,37 @@
+{
+  "primary_allowlist": "Tranco top 10000",
+  "criteria": {
+    "exact_homepage": {
+      "checks": {
+        "C1 phishing allowlisted <= 0.005 (holdout_capped, holdout, dev)": true,
+        "C2 recall >= reference + 0.02 (holdout_capped, dev)": true,
+        "C3 PR-AUC >= reference (holdout_capped, dev)": true,
+        "C4 homepage false alarms rise <= 0.02": false,
+        "C5 non-allowlisted rows: PR-AUC >= reference, FAR <= reference + 0.005": true
+      },
+      "passed": false
+    },
+    "site": {
+      "checks": {
+        "C1 phishing allowlisted <= 0.005 (holdout_capped, holdout, dev)": false,
+        "C2 recall >= reference + 0.02 (holdout_capped, dev)": true,
+        "C3 PR-AUC >= reference (holdout_capped, dev)": false,
+        "C4 homepage false alarms rise <= 0.02": false,
+        "C5 non-allowlisted rows: PR-AUC >= reference, FAR <= reference + 0.005": true
+      },
+      "passed": false
+    },
+    "registered_domain": {
+      "checks": {
+        "C1 phishing allowlisted <= 0.005 (holdout_capped, holdout, dev)": false,
+        "C2 recall >= reference + 0.02 (holdout_capped, dev)": false,
+        "C3 PR-AUC >= reference (holdout_capped, dev)": false,
+        "C4 homepage false alarms rise <= 0.02": false,
+        "C5 non-allowlisted rows: PR-AUC >= reference, FAR <= reference + 0.005": true
+      },
+      "passed": false
+    }
+  },
+  "decision": "baseline (no arm passed)",
+  "run_e10": false
+}
