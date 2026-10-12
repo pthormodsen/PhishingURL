@@ -1,0 +1,25 @@
+{
+  "dataset": "phreshphish/phreshphish",
+  "revision": "eabec4b7a66324b79cc8a0ad856d1731dc26fe1a",
+  "stream_seed": 42,
+  "stream_buffer_size": 10000,
+  "final_test_seed": 2026,
+  "full_test_split_rows": 168060,
+  "test_rows_removed_for_text_overlap": 10254,
+  "test_rows_removed_as_duplicates": 1744,
+  "final_test_pool_rows": 156062,
+  "files": {
+    "train_sample.parquet": {
+      "rows": 30000,
+      "sha256": "dc6b3fa08e3497ad1c54a2f99907f6a2aacbb4d1d2dd15deec8b4c00f0728691"
+    },
+    "dev_benchmark.parquet": {
+      "rows": 10000,
+      "sha256": "820c3fb6cce19ec28b9eefcaaf52a0f6c349e62017397ef2157790557be1fbd1"
+    },
+    "final_test.parquet": {
+      "rows": 10000,
+      "sha256": "e2587f9774924bdf7982c7f34cd1b5d9caab0bdd8f5ea86d2c8219f63ac853ff"
+    }
+  }
+}

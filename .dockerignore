@@ -1,0 +1,7 @@
+# Build context for backend/Dockerfile is the repository root.
+# Exclude everything, then allow only what the backend image needs.
+*
+!backend/
+!models/phresh_text_model.joblib
+backend/**/__pycache__
+backend/Dockerfile

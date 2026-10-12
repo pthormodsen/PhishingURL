@@ -1,0 +1,8 @@
+{
+  "criteria": {
+    "1 recall +0.02 on holdout and dev": true,
+    "2 PR-AUC not lower on holdout and dev": true,
+    "3 homepage false alarms rise at most 0.02": false
+  },
+  "decision": "baseline"
+}

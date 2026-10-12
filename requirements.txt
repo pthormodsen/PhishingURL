@@ -1,0 +1,23 @@
+# Python 3.14. Install with: python -m venv .venv && .venv/bin/pip install -r requirements.txt
+
+# Backend
+fastapi==0.143.0
+uvicorn==0.54.0
+pydantic==2.14.1
+joblib==1.6.0
+scikit-learn==1.9.1
+
+# Data and experiments
+numpy==2.5.4
+pandas==3.0.6
+pyarrow==26.0.0
+scipy==1.18.1
+matplotlib==3.11.2
+datasets==5.1.0
+huggingface_hub==2.2.0
+tldextract==5.4.0
+
+# Notebooks
+ipykernel==7.4.0
+nbclient==0.11.0
+nbformat==5.11.1

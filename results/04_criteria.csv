@@ -1,0 +1,4 @@
+,C1 homepage FAR <= half of A0,C2 recall at matched FAR >= A0 - 0.01,C3 phishing homepage recall >= A0 - 0.03,C4 PR-AUC >= A0,C5 dev homepage FAR < A0,PASS
+A1 augmented,True,False,False,False,True,False
+A2 split,False,True,True,True,False,False
+A3 split + augmented,True,False,False,False,True,False

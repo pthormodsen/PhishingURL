@@ -1,0 +1,4 @@
+Pair,Target rows,url rows,url %,text rows,text %,host rows,host %,domain rows,domain %
+train sample -> dev benchmark,10000,0,0.0,0,0.0,2139,21.39,3588,35.88
+train sample -> final test,10000,0,0.0,0,0.0,2213,22.13,3630,36.3
+dev benchmark -> final test,10000,0,0.0,0,0.0,2302,23.02,4691,46.91

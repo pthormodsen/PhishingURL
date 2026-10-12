@@ -1,0 +1,57 @@
+# Production deployment for docker01.
+#
+# - backend: FastAPI, only on the internal network (no internet access).
+# - frontend: Nginx with the built React app. It proxies /api/predict to the
+#   backend and is the only service on the external "cloudflare" network,
+#   where the Cloudflare Tunnel reaches it as http://phishing:80.
+# - No host ports are published.
+
+name: phishing-url-detector
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: phishing-url-detector-backend:latest
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/openapi.json', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+    image: phishing-url-detector-frontend:latest
+    restart: unless-stopped
+    environment:
+      NGINX_ENTRYPOINT_LOCAL_RESOLVERS: "1"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      internal: {}
+      cloudflare:
+        aliases:
+          - phishing
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  internal:
+    internal: true
+  cloudflare:
+    external: true
+    name: cloudflare

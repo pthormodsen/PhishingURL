@@ -1,0 +1,13 @@
+{
+  "Training fold rows": 24000,
+  "Training fold hostnames": 17243,
+  "Benign-only hostnames": 8573,
+  "Phishing-only hostnames": 8660,
+  "Conflicting hostnames (excluded)": 10,
+  "Benign-only hostnames with an existing homepage-like row (skipped)": 932,
+  "Benign-only hostnames with empty hostname (skipped)": 0,
+  "Generated weakly labeled homepages": 7641,
+  "Generated rows as % of training fold rows": 31.84,
+  "Sample weight for generated rows": 0.5,
+  "Benign homepage-like rows in training fold before augmentation": 932
+}

@@ -1,0 +1,101 @@
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.lead {
+  margin-bottom: 32px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-h);
+  margin-bottom: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  font: inherit;
+  color: var(--text-h);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+button {
+  padding: 12px 20px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.error {
+  margin-top: 16px;
+  color: var(--danger);
+}
+
+.result {
+  margin-top: 24px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.result p + p {
+  margin-top: 12px;
+}
+
+.result.flagged {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+
+.result.flagged h2 {
+  color: var(--danger);
+}
+
+.result.neutral {
+  background: var(--neutral-bg);
+}
+
+.model-input code {
+  word-break: break-all;
+}
+
+.about {
+  margin-top: 48px;
+  font-size: 0.9em;
+}
+
+.about ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.about li + li {
+  margin-top: 6px;
+}
+
+@media (max-width: 480px) {
+  .row {
+    flex-direction: column;
+  }
+}

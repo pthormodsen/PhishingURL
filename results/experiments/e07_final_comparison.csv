@@ -1,0 +1,19 @@
+,baseline,improved,difference
+threshold (from val),0.5483,0.6865,0.1382
+holdout PR-AUC,0.9756,0.9888,0.01319999999999999
+holdout phishing recall,0.7752,0.8749,0.09970000000000001
+holdout precision,0.9843,0.9846,0.000300000000000078
+holdout F1,0.8673,0.9265,0.05920000000000003
+holdout false positive rate,0.0091,0.0099,0.0008000000000000004
+holdout benign homepage false alarms,0.0411,0.0755,0.0344
+holdout phishing homepage recall,0.7873,0.8933,0.10599999999999998
+dev PR-AUC,0.9767,0.9851,0.008399999999999963
+dev phishing recall,0.7255,0.8295,0.10399999999999998
+dev precision,0.9838,0.9855,0.0017000000000000348
+dev F1,0.8351,0.9008,0.06570000000000009
+dev false positive rate,0.0102,0.0104,0.0001999999999999988
+dev benign homepage false alarms,0.033,0.0659,0.0329
+dev phishing homepage recall,0.762,0.8798,0.11780000000000002
+popular homepages flagged (Tranco top 1k),0.1942,0.223,0.028799999999999992
+popular homepages flagged (Tranco top 10k),0.1741,0.2036,0.0295
+popular homepages flagged (Tranco 10k-100k),0.1799,0.2332,0.053299999999999986

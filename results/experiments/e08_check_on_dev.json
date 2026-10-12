@@ -1,0 +1,226 @@
+{
+  "model": "models/phresh_text_model.joblib",
+  "threshold": 0.5,
+  "rows": 10000,
+  "label_counts": {
+    "benign": 5403,
+    "phish": 4597
+  },
+  "accuracy": 0.9004,
+  "confusion_matrix [[phish->phish, phish->benign], [benign->phish, benign->benign]]": [
+    [
+      3678,
+      919
+    ],
+    [
+      77,
+      5326
+    ]
+  ],
+  "all": {
+    "n": 10000,
+    "threshold": 0.5,
+    "precision": 0.9795,
+    "recall": 0.8001,
+    "f1": 0.8807,
+    "benign_far": 0.0143,
+    "pr_auc": 0.9773,
+    "roc_auc": 0.978,
+    "benign_homepage_far": {
+      "k": 25,
+      "n": 455,
+      "rate": 0.0549,
+      "ci95": [
+        0.0375,
+        0.0799
+      ]
+    },
+    "phish_homepage_recall": {
+      "k": 1775,
+      "n": 2122,
+      "rate": 0.8365,
+      "ci95": [
+        0.8201,
+        0.8516
+      ]
+    },
+    "phish_other_recall": {
+      "k": 1903,
+      "n": 2475,
+      "rate": 0.7689,
+      "ci95": [
+        0.7519,
+        0.7851
+      ]
+    },
+    "precision_at_1pct_prevalence": 0.3619
+  },
+  "seen_site": {
+    "n": 2758,
+    "threshold": 0.5,
+    "precision": 0.9582,
+    "recall": 0.8753,
+    "f1": 0.9149,
+    "benign_far": 0.0063,
+    "pr_auc": 0.9655,
+    "roc_auc": 0.9883,
+    "benign_homepage_far": {
+      "k": 1,
+      "n": 29,
+      "rate": 0.0345,
+      "ci95": [
+        0.0061,
+        0.1718
+      ]
+    },
+    "phish_homepage_recall": {
+      "k": 124,
+      "n": 128,
+      "rate": 0.9688,
+      "ci95": [
+        0.9224,
+        0.9878
+      ]
+    },
+    "phish_other_recall": {
+      "k": 220,
+      "n": 265,
+      "rate": 0.8302,
+      "ci95": [
+        0.7803,
+        0.8706
+      ]
+    },
+    "precision_at_1pct_prevalence": 0.5823
+  },
+  "unseen_site": {
+    "n": 7242,
+    "threshold": 0.5,
+    "precision": 0.9817,
+    "recall": 0.7931,
+    "f1": 0.8774,
+    "benign_far": 0.0204,
+    "pr_auc": 0.9799,
+    "roc_auc": 0.9701,
+    "benign_homepage_far": {
+      "k": 24,
+      "n": 426,
+      "rate": 0.0563,
+      "ci95": [
+        0.0381,
+        0.0825
+      ]
+    },
+    "phish_homepage_recall": {
+      "k": 1651,
+      "n": 1994,
+      "rate": 0.828,
+      "ci95": [
+        0.8108,
+        0.8439
+      ]
+    },
+    "phish_other_recall": {
+      "k": 1683,
+      "n": 2210,
+      "rate": 0.7615,
+      "ci95": [
+        0.7433,
+        0.7788
+      ]
+    },
+    "precision_at_1pct_prevalence": 0.2819
+  },
+  "brands": {
+    "google": {
+      "k": 533,
+      "n": 557,
+      "rate": 0.9569,
+      "ci95": [
+        0.9367,
+        0.9709
+      ]
+    },
+    "betwinner": {
+      "k": 305,
+      "n": 366,
+      "rate": 0.8333,
+      "ci95": [
+        0.7917,
+        0.868
+      ]
+    },
+    "trezor": {
+      "k": 260,
+      "n": 262,
+      "rate": 0.9924,
+      "ci95": [
+        0.9726,
+        0.9979
+      ]
+    },
+    "grandlisboamacau": {
+      "k": 173,
+      "n": 220,
+      "rate": 0.7864,
+      "ci95": [
+        0.7275,
+        0.8354
+      ]
+    },
+    "ledger": {
+      "k": 209,
+      "n": 209,
+      "rate": 1.0,
+      "ci95": [
+        0.982,
+        1.0
+      ]
+    },
+    "robinhood": {
+      "k": 119,
+      "n": 181,
+      "rate": 0.6575,
+      "ci95": [
+        0.5857,
+        0.7227
+      ]
+    },
+    "roblox": {
+      "k": 142,
+      "n": 145,
+      "rate": 0.9793,
+      "ci95": [
+        0.9409,
+        0.9929
+      ]
+    },
+    "naver": {
+      "k": 103,
+      "n": 127,
+      "rate": 0.811,
+      "ci95": [
+        0.7342,
+        0.8696
+      ]
+    },
+    "other (no named brand)": {
+      "k": 17,
+      "n": 56,
+      "rate": 0.3036,
+      "ci95": [
+        0.199,
+        0.4334
+      ]
+    },
+    "brand name in hostname": {
+      "k": 483,
+      "n": 588,
+      "rate": 0.8214,
+      "ci95": [
+        0.7884,
+        0.8503
+      ]
+    }
+  }
+}

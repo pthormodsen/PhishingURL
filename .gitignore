@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.~lock.*
+node_modules/
+frontend/dist/
+
+# Regenerable data (scripts/prepare_phreshphish.py, experiments/prepare_data.py)
+data/external/tranco_raw/
+data/phreshphish/train_full.parquet
+data/phreshphish/pool_cache_*.parquet

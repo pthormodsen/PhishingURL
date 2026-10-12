@@ -1,0 +1,173 @@
+{
+  "raw_train_rows": 498255,
+  "pool_rows_after_dedup": 488728,
+  "partitions": {
+    "fit": {
+      "benign": 183662,
+      "phish": 150238
+    },
+    "holdout": {
+      "benign": 46519,
+      "phish": 23448
+    },
+    "val": {
+      "benign": 46448,
+      "phish": 38413
+    }
+  },
+  "homepage_like_share_by_label": {
+    "benign": 0.06981191415216771,
+    "phish": 0.45057732473986206
+  },
+  "top_domains": {
+    "phish": {
+      "gitbook.io": 19736,
+      "webflow.io": 19566,
+      "google.com": 12272,
+      "weeblysite.com": 8419,
+      "weebly.com": 7651,
+      "vercel.app": 7163,
+      "r2.dev": 6467,
+      "pages.dev": 6009,
+      "github.io": 5317,
+      "web.app": 2116,
+      "blogspot.com": 1866,
+      "firebaseapp.com": 1800,
+      "wixsite.com": 1775,
+      "duckdns.org": 1216,
+      "glitch.me": 1144
+    },
+    "benign": {
+      "wikipedia.org": 10784,
+      "reddit.com": 3291,
+      "facebook.com": 3128,
+      "2mdn.net": 2594,
+      "amazon.com": 2492,
+      "merriam-webster.com": 1570,
+      "imdb.com": 1569,
+      "youtube.com": 1515,
+      "quora.com": 1509,
+      "microsoft.com": 1354,
+      "yahoo.com": 1302,
+      "apple.com": 1169,
+      "fandom.com": 1130,
+      "ebay.com": 1108,
+      "linkedin.com": 1092
+    }
+  },
+  "unique_domains_by_label": {
+    "benign": 96226,
+    "phish": 42969
+  },
+  "share_in_tranco_top10k_by_label": {
+    "benign": 0.418434075964559,
+    "phish": 0.5109217865242175
+  },
+  "share_in_tranco_top100k_by_label": {
+    "benign": 0.6320306258562913,
+    "phish": 0.6205309784581728
+  },
+  "bare_homepage_of_tranco_top100k_by_label": {
+    "benign": 1267,
+    "phish": 30
+  },
+  "bare_homepage_of_tranco_top100k_phish_examples": [
+    "https://www.mlive.com/",
+    "https://www.max.co.il/",
+    "https://pancake.vn/",
+    "https://www.producthunt.com/",
+    "http://oszar.com/",
+    "https://workflowy.com/",
+    "http://eventim.de/",
+    "https://www.myheritage.com/",
+    "https://pokeapi.co/",
+    "https://www.scamadviser.com",
+    "http://www.bandlab.com/",
+    "https://werner.wiessmann@t-online.de/",
+    "http://tawk.to/",
+    "http://ugr.es/",
+    "http://mydomain.com/",
+    "https://www.bn.com.pe/",
+    "http://vipvoice.io/",
+    "http://comcast.net/",
+    "https://www.netlify.app/",
+    "http://lu.ma/"
+  ],
+  "benign_homepages_total": 19312,
+  "benign_homepages_in_top10k": 1345,
+  "phish_with_target_share": 1.0,
+  "top_targets": {
+    "other": 133045,
+    "facebook": 15213,
+    "meta": 13619,
+    "robinhood": 5031,
+    "at&t": 4781,
+    "usps": 3849,
+    "naver": 3354,
+    "booking": 3267,
+    "instagram": 2644,
+    "whatsapp": 2590,
+    "microsoft": 1201,
+    "netflix": 988,
+    "rakuten": 970,
+    "internal revenue service": 599,
+    "salesforce": 590,
+    "allegro": 547,
+    "outlook": 510,
+    "dhl": 501,
+    "qmp": 448,
+    "d account": 426,
+    "nomura": 407,
+    "tiktok": 382,
+    "sbi securities co.,ltd.": 366,
+    "apple": 356,
+    "swisspass": 348
+  },
+  "targeted_phish_brand_token_in_host_share": 0.05661035648447187,
+  "targeted_phish_brand_token_in_text_share": 0.0803445560799438,
+  "date_range_by_partition": {
+    "fit": [
+      "2024-07-02",
+      "2025-09-08"
+    ],
+    "holdout": [
+      "2024-07-02",
+      "2025-09-08"
+    ],
+    "val": [
+      "2024-07-02",
+      "2025-09-08"
+    ]
+  },
+  "pool_rows_by_quarter": {
+    "2024Q3": {
+      "benign": 160079.0,
+      "phish": 94003.0
+    },
+    "2024Q4": {
+      "benign": 14866.0,
+      "phish": 44621.0
+    },
+    "2025Q1": {
+      "benign": NaN,
+      "phish": 36537.0
+    },
+    "2025Q2": {
+      "benign": 6759.0,
+      "phish": 7205.0
+    },
+    "2025Q3": {
+      "benign": 94925.0,
+      "phish": 29733.0
+    }
+  },
+  "dev_rows_with_domain_in_fit": 0.4139,
+  "dev_homepage_like_share_by_label": {
+    "benign": 0.08421247455117527,
+    "phish": 0.46160539482271046
+  },
+  "dev_share_in_tranco_top10k_by_label": {
+    "benign": 0.3934851008698871,
+    "phish": 0.21775070698281487
+  }
+}
