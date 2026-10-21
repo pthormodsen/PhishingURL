@@ -1,147 +1,158 @@
 # Phishing URL Detector
 
-DAT158 machine learning project. A website where a user enters a URL and
-gets a machine learning based assessment of whether the URL looks like
-phishing. The model reads only the URL text. It never visits the website.
+DAT158 machine learning project by William Waly, Fahad Ahmed and Patrik
+Thormodsen.
 
-- **Model:** character 3-5 gram TF-IDF + logistic regression
-  (`SGDClassifier(loss="log_loss")`), trained on the PhreshPhish dataset.
-- **Final test (10,000 URLs, run once):** accuracy 0.906, phishing precision
-  0.977, phishing recall 0.808, F1 0.885, false positive rate 1.5%.
-- **Known weakness:** popular homepages such as `google.com` are flagged
-  about 17-19% of the time, and look-alike domains are not reliably caught.
-  See `notebooks/05_summary_and_final_evaluation.ipynb`.
+- **Live website:** https://phishing.patreek.no
+- **Report:** [Report.pdf](Report.pdf) (source: `Report.odt`)
 
-## Repository layout
+Enter a URL and the website tells you whether a machine learning model flags
+it as possible phishing. The model reads only the URL text. It never visits
+the website. The result is a warning signal, not a guarantee.
 
-| Path | Content |
-|---|---|
-| `notebooks/01` to `04` | Exploration, first models, PhreshPhish model, homepage experiment |
-| `notebooks/05_summary_and_final_evaluation.ipynb` | Summary of all experiments and the final test |
-| `experiments/` | Reproducible experiment scripts (`e00` to `e08`) and shared code |
-| `scripts/prepare_phreshphish.py` | Creates the fixed PhreshPhish samples, including the reserved test set |
-| `models/phresh_text_model.joblib` | The deployed model |
-| `backend/` | FastAPI service (`POST /predict`) |
-| `frontend/` | React + TypeScript + Vite website, Nginx configuration |
-| `compose.yaml`, `Makefile` | Production deployment |
+## Results
 
-Labels: **0 = phishing, 1 = legitimate**.
+The deployed model was evaluated once on 10,000 reserved URLs from the
+PhreshPhish test split (threshold 0.5). Phishing is the positive class.
 
-## Local development
+| Metric | Model | Always "legitimate" baseline |
+|---|---|---|
+| Accuracy | 0.906 | 0.552 |
+| Precision (phishing) | 0.977 | - |
+| Recall (phishing) | 0.808 | 0.000 |
+| F1 | 0.885 | 0.000 |
+| False positive rate | 1.5% | 0% |
+
+Known weaknesses: about 17-19% of popular homepages such as `google.com` are
+flagged, phishing pages on legitimate hosting platforms are often missed, and
+look-alike domains such as `netf1ix.com` are not reliably caught. See the
+report and `notebooks/05_summary_and_final_evaluation.ipynb`.
+
+## How it works
+
+1. **Preprocessing** (`backend/features.py`): lowercase the hostname, remove
+   the scheme and `www.`, keep path, query and fragment.
+2. **Model:** character 3-5 gram TF-IDF + logistic regression
+   (`SGDClassifier(loss="log_loss")`).
+3. **Backend** (`backend/main.py`): FastAPI, `POST /predict {"url": ...}`.
+   A URL is flagged as phishing if its phishing score is at least 0.5.
+4. **Frontend** (`frontend/`): React + TypeScript + Vite.
+
+**The deployed model** is `models/phresh_text_model.joblib`. It was trained
+in `notebooks/03_phreshphish_datasett.ipynb` on 24,000 URLs from the
+PhreshPhish train split. The later experiments (`experiments/e01` to `e09`)
+tried to improve it, but no candidate met all our criteria, so this model
+was kept unchanged. `models/random_forest.joblib` is an early PhiUSIIL model
+from notebook 01 and is not used by the website.
+
+Labels everywhere: **0 = phishing, 1 = legitimate**.
+
+## Run it locally
+
+Requirements: Python 3.14 and Node.js.
 
 ```sh
 python3.14 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-# Backend on http://127.0.0.1:8000 (run from the repository root)
+# Terminal 1: backend on http://127.0.0.1:8000 (run from the repository root)
 .venv/bin/uvicorn backend.main:app --reload
 
-# Frontend on http://localhost:5173, proxies /api to the backend
-cd frontend && npm install && npm run dev
+# Terminal 2: website on http://localhost:5173
+cd frontend
+npm install
+npm run dev
 ```
 
-To reproduce the data and experiments:
+The Vite dev server forwards `/api/*` to the backend.
+
+You can also call the backend directly:
 
 ```sh
-.venv/bin/python scripts/prepare_phreshphish.py   # fixed samples, pinned dataset revision
-.venv/bin/python experiments/prepare_data.py      # full train split and Tranco list
-cd experiments && ../.venv/bin/python e01_baselines.py   # and so on, see experiments/
+curl -X POST http://127.0.0.1:8000/predict \
+  -H "Content-Type: application/json" -d '{"url": "example.com"}'
 ```
 
-Do not rerun `experiments/e08_final_test.py`. The final test has been used
-once, and the script refuses to run again.
+## Reproduce the results
 
-## Deployment on docker01
+All data samples, results and the deployed model are committed, so every
+notebook can be read without running anything. To rerun:
 
-### Architecture
+1. **Data.** The PhiUSIIL CSV and the fixed PhreshPhish samples are already
+   in `data/`. To recreate the samples from the pinned dataset revision:
+   `.venv/bin/python scripts/prepare_phreshphish.py`
+2. **Notebooks** (run from `notebooks/`, for example in VS Code or with
+   `cd notebooks && ../.venv/bin/jupyter execute <notebook>`):
 
-```
-Internet -> Cloudflare Tunnel -> [cloudflare network] -> frontend (Nginx :80)
-                                                             |  /api/predict
-                                         [internal network]  v
-                                                          backend (FastAPI :8000)
-```
+   | Notebook | Content |
+   |---|---|
+   | `01_exploration` | PhiUSIIL exploration, first random forest |
+   | `02_url_text_model` | First TF-IDF text model on PhiUSIIL |
+   | `03_phreshphish_datasett` | **Trains and saves the deployed model** (downloads data from Hugging Face; overwrites `models/phresh_text_model.joblib`) |
+   | `04_homepage_ablation` | Homepage augmentation experiment (no improvement) |
+   | `05_summary_and_final_evaluation` | Summary of everything, trains nothing |
 
-- **frontend:** Nginx serves the built React app and proxies
-  `/api/predict` to the backend `/predict`. It is the only service on the
-  external `cloudflare` network, where it has the alias `phishing`.
-- **backend:** FastAPI with Uvicorn (no `--reload`). It is only on the
-  internal Compose network, which has no internet access, and it runs as a
-  non-root user with a read-only filesystem.
-- **No host ports are published.** The site is reachable only through the
-  tunnel.
-- **What the backend image contains:** `models/phresh_text_model.joblib`
-  and `backend/features.py`, so the model, the threshold (0.5) and the
-  preprocessing are identical to development. `backend/requirements.txt`
-  pins the exact library versions the model was saved with.
+3. **Experiments.** First download the full train split:
+   `.venv/bin/python experiments/prepare_data.py`. Then run each script from
+   `experiments/`, for example `cd experiments && ../.venv/bin/python e01_baselines.py`.
+   Results are written to `results/experiments/`.
 
-### Cloudflare Tunnel target
+   | Script | Content |
+   |---|---|
+   | `e00_data_audit` | Data audit |
+   | `e01_baselines` | Baselines with site-grouped splits |
+   | `e02_capacity` | Classifier, regularisation and n-gram range |
+   | `e03_canonical_path` | Preprocessing variant and regularisation curve |
+   | `e04_structural_trees` | Structural features with decision tree, random forest, gradient boosting |
+   | `e05_ensembles` | Soft voting and stacking |
+   | `e06_learning_curve` | Learning curves |
+   | `e07_final_comparison` | Deployed model against the best improved model (kept the deployed model) |
+   | `e08_final_test` | One-time final test. **Do not rerun:** the script refuses to run again |
+   | `e09_allowlist` | Allowlist of popular domains in front of the model (no improvement) |
 
-In the Cloudflare Tunnel configuration, point the public hostname to:
+   Shared code is in `common.py` (splits and evaluation), `features.py` and
+   `models.py`.
 
-```
-http://phishing:80
-```
+## Repository layout
 
-The tunnel container (`cloudflared`) must be attached to the same external
-Docker network, `cloudflare`.
-
-### First startup
-
-Requirements on docker01: Docker with the Compose plugin, `make`, `git`,
-and the existing external network `cloudflare`.
-
-```sh
-git clone <repository-url> phishing-url-detector
-cd phishing-url-detector
-make deploy        # checks the network, builds, starts, waits for health, runs a smoke test
-make smoke-tunnel  # tests http://phishing:80 exactly as the tunnel reaches it
-```
-
-A successful smoke test prints a JSON prediction, for example:
-
-```json
-{"prediction":1,"label":"Not flagged by the model","phishing_score":0.47...,"model_input":"example.com"}
-```
-
-### Everyday commands
-
-| Command | Purpose |
+| Path | Content |
 |---|---|
-| `make ps` | Container status and health |
-| `make logs` | Follow logs from both services |
-| `make restart` | Restart both containers |
-| `make down` | Stop and remove the containers |
-| `make check` | Validate `compose.yaml` |
-| `make help` | List all targets |
+| `Report.pdf`, `Report.odt` | The project report |
+| `notebooks/` | Exploration, model training and the summary |
+| `experiments/` | Experiment scripts `e00` to `e09` |
+| `scripts/prepare_phreshphish.py` | Creates the fixed PhreshPhish samples, including the reserved test set |
+| `data/` | Datasets and samples |
+| `models/` | Saved models (`phresh_text_model.joblib` is deployed) |
+| `results/` | Saved experiment results |
+| `backend/` | FastAPI service |
+| `frontend/` | React website and Nginx configuration |
+| `compose.yaml`, `Makefile` | Production deployment |
 
-### Updating
+## Our production setup
 
-```sh
-make update        # git pull --ff-only, rebuild, restart, smoke test
-make clean         # optional: remove old dangling images
+The live website runs on our own server (docker01) with Docker Compose:
+
+```
+Internet -> Cloudflare Tunnel -> frontend (Nginx :80) -> /api/predict -> backend (FastAPI :8000)
 ```
 
-Nginx looks up the backend address at request time, so a recreated backend
-container is found again automatically. Requests can fail for up to about
-10 seconds while the DNS cache expires.
+- `frontend` serves the built React app and is the only container on the
+  external `cloudflare` Docker network (alias `phishing`, tunnel target
+  `http://phishing:80`). No host ports are published.
+- `backend` is only on an internal network, runs as a non-root user with a
+  read-only filesystem, and uses `backend/requirements.txt`, pinned to the
+  library versions the model was saved with. Do not change scikit-learn,
+  numpy, scipy or joblib without retraining the model.
 
-To replace the model, save the new model as `models/phresh_text_model.joblib`
-(with matching preprocessing in `backend/features.py` and matching versions in
-`backend/requirements.txt`), then run `make deploy`.
+```sh
+make deploy        # build, start, wait for health, smoke test
+make update        # git pull, rebuild, restart, smoke test
+make ps            # status;  make logs: follow logs;  make help: all targets
+```
 
-### Troubleshooting
-
-| Symptom | Likely cause and fix |
-|---|---|
-| `Network 'cloudflare' not found` | The external network is missing. It belongs to the Cloudflare Tunnel setup; check with `docker network ls`. For a local test only: `docker network create cloudflare`. |
-| Website shows "The service is not responding" | Backend unhealthy or still starting. Check `make ps` and `docker compose logs backend`. |
-| Cloudflare shows error 502 or 1033 | The tunnel cannot reach `phishing:80`. Check that `cloudflared` is on the `cloudflare` network (`docker network inspect cloudflare`) and that the target is `http://phishing:80`. Run `make smoke-tunnel`. |
-| `make deploy` hangs on "Waiting" | A health check fails. `docker compose logs backend` usually shows the model loading error. |
-| Backend fails with an unpickling or version error | Library versions differ from the ones the model was saved with. Keep `backend/requirements.txt` unchanged, or retrain and save the model with the new versions. |
-| Nginx returns 502 right after an update | The backend is restarting. Wait a few seconds; if it persists, check `docker compose logs backend`. |
-| `permission denied ... docker.sock` | Your user is not in the `docker` group, or the session started before it was added. Log out and in again. |
-| Port conflict | Not possible: no host ports are published. |
+`make deploy` needs the external network `cloudflare` (for a local test:
+`docker network create cloudflare`). To try the site on your own machine,
+use [Run it locally](#run-it-locally) instead.
 
 ## Data and references
 
@@ -152,15 +163,16 @@ To replace the model, save the new model as `models/phresh_text_model.joblib`
 - **PhiUSIIL:** A. Prasad and S. Chandra, "PhiUSIIL: A diverse security profile
   empowered phishing URL detection framework based on similarity index and
   incremental learning", Computers & Security 136, 2024. UCI Machine Learning
-  Repository. Used in notebooks 01 and 02 only.
+  Repository, CC BY 4.0. Used in notebooks 01 and 02 only.
 - **Tranco:** V. Le Pochat et al., "Tranco: A Research-Oriented Top Sites
   Ranking Hardened Against Manipulation", NDSS 2019. List `Y83YG`, used only
   to evaluate false alarms on popular homepages.
-- **Tools:** scikit-learn, FastAPI, React, Vite, Nginx.
+- **Tools:** scikit-learn (Pedregosa et al., JMLR 12, 2011), FastAPI, React,
+  Vite, Docker, Nginx, Cloudflare Tunnel.
 
 ## AI assistance
 
-Parts of the experiment code, evaluation scripts, web application changes
-and deployment configuration were developed with help from Claude
-(Anthropic) through Claude Code. All results were checked by running the
-code, and the modelling decisions are documented in notebook 05.
+Claude Code and ChatGPT were used to assist with parts of the code,
+experiments, evaluation, web application, deployment configuration and
+report writing. The project group reviewed the generated content, verified
+the results and made the final decisions.
