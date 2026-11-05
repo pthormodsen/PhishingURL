@@ -15,9 +15,12 @@ jobs:
     strategy:
       matrix:
         include:
-          # One entry per image. Repo with frontend + backend? Add a second entry.
-          - name: ""          # empty = image named after the repo
-            context: .        # folder containing the Dockerfile
+          - name: backend
+            context: .
+            file: backend/Dockerfile
+          - name: frontend
+            context: ./frontend
+            file: ./frontend/Dockerfile
     steps:
       - uses: actions/checkout@v4
 
@@ -38,6 +41,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
           platforms: linux/amd64
           push: true
           tags: |
