@@ -1,0 +1,47 @@
+name: Build and push image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          # One entry per image. Repo with frontend + backend? Add a second entry.
+          - name: ""          # empty = image named after the repo
+            context: .        # folder containing the Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Image name
+        run: |
+          repo="${GITHUB_REPOSITORY,,}"
+          suffix="${{ matrix.name }}"
+          echo "IMAGE=ghcr.io/${repo}${suffix:+-$suffix}" >> "$GITHUB_ENV"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:sha-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
