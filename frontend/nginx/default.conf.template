@@ -20,7 +20,7 @@ server {
     # Resolve "backend" through the container DNS at request time, so a
     # recreated backend container with a new IP address is found again
     resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
-    set $backend_upstream http://backend:8000;
+    set $backend_upstream ${BACKEND_URL};
 
     # The only API route exposed to the internet
     location = /api/predict {
